@@ -1,12 +1,18 @@
 import tweepy
 from . import api
 
+
 class WorkerStreamListener(tweepy.StreamListener):
     def __init__(self, api):
         self.api = api
         self.me = api.me()
 
     def on_status(self, tweet):
+
+        # Check if tweet is reply
+        if tweet.in_reply_to_status_id is not None:
+            return
+
         # Like and retweet if not done already
         if not tweet.favorited:
             try:
@@ -16,19 +22,22 @@ class WorkerStreamListener(tweepy.StreamListener):
         if not tweet.retweeted:
             try:
                 tweet.retweet()
-            except:
+            except Exception as e:
                 print(f'Exception during retweet {e}')
-        
+
         print(f'{tweet.user.name}:{tweet.text}')
 
     def on_error(self, status):
         print('Error detected')
 
+
 twitter_ids = [
-    '702590808965316608', # Abhi_indian
-    '44196397',           # elonmusk            
-    '92708272',           # msdhoni
-    ]
+    '702590808965316608',  # Abhi_indian
+    '44196397',            # elonmusk
+    '92708272',            # msdhoni
+]
+
+
 def run_worker():
     api_ = api.Bot().get_api()
     tweet_listener = WorkerStreamListener(api_)
