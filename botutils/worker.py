@@ -24,10 +24,14 @@ class WorkerStreamListener(tweepy.StreamListener):
     def on_error(self, status):
         print('Error detected')
 
-
+twitter_ids = [
+    '702590808965316608', # Abhi_indian
+    '44196397',           # elonmusk            
+    '92708272',           # msdhoni
+    ]
 def run_worker():
     api_ = api.Bot().get_api()
     tweet_listener = WorkerStreamListener(api_)
     stream = tweepy.Stream(api_.auth, tweet_listener)
-    stream.filter(track=["Hacking", "Network", "Kargil"], languages=["en"], is_async=True)
-    #stream.filter(follow=['445921112'])
+    #stream.filter(track=["Hacking"], languages=["en"], is_async=True)
+    stream.filter(follow=twitter_ids)
