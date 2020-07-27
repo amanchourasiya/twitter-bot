@@ -9,6 +9,13 @@ class WorkerStreamListener(tweepy.StreamListener):
 
     def on_status(self, tweet):
 
+        # Check if this tweet is just a mention
+        if check_mentions(tweet.user.id):
+            print(f'Tweet is a mention and is from {tweet.user.name}')
+            return
+
+        print(f'{tweet.user.id}')
+
         # Check if tweet is reply
         if tweet.in_reply_to_status_id is not None:
             return
@@ -44,3 +51,8 @@ def run_worker():
     stream = tweepy.Stream(api_.auth, tweet_listener)
     #stream.filter(track=["Hacking"], languages=["en"], is_async=True)
     stream.filter(follow=twitter_ids)
+
+def check_mentions(user_id):
+    if user_id in twitter_ids:
+        return False
+    return True
