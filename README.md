@@ -8,6 +8,7 @@ To run this all you can run locally or in a docker container
 The only prequisite is the API keys and ACCESS tokens for twitter developer API.
 [Twitter developer API](https://developer.twitter.com/en)
 
+## Deployment
 For running locally
 ```
 python3 bot.py
