@@ -1,58 +1,36 @@
-import tweepy
-from . import api
+import sys
+from . import config
+from . import utils
 
 
-class WorkerStreamListener(tweepy.StreamListener):
-    def __init__(self, api):
-        self.api = api
-        self.me = api.me()
+class Worker:
+    def __init__(self):
+        self.logger = utils.get_logger()
+        self.api = config.get_api()
+        if self.api == None:
+            self.logger.error('Failed to get api. Exiting ...')
+            sys.exit(1)
 
-    def on_status(self, tweet):
+    def recent_tweets(self):
+        timeline = self.api.home_timeline()
+        for tweet in timeline:
+            self.logger.info(f'{tweet.user.name} said {tweet.text}')
 
-        # Check if this tweet is just a mention
-        if check_mentions(tweet.user.id):
-            print(f'Tweet is a mention and is from {tweet.user.name}')
-            return
+    def update_status(self, status):
+        self.api.update_status(status)
 
-        print(f'{tweet.user.id}')
+    def get_latest_trends(self):
+        # WOID for India 2282863
+        trends_result = self.api.trends_place(2282863)
+        for trend in trends_result[0]['trends']:
+            self.logger.info(trend['name'])
 
-        # Check if tweet is reply
-        if tweet.in_reply_to_status_id is not None:
-            return
+    def get_latest_tweets(self, id='702590808965316608'):
+        allstatus = self.api.user_timeline(id=id)
+        for status in allstatus:
+            self.logger.info(status.text)
 
-        # Like and retweet if not done already
-        if not tweet.favorited:
-            try:
-                tweet.favorite()
-            except Exception as e:
-                print(f'Exception during favourite {e}')
-        if not tweet.retweeted:
-            try:
-                tweet.retweet()
-            except Exception as e:
-                print(f'Exception during retweet {e}')
-
-        print(f'{tweet.user.name}:{tweet.text}')
-
-    def on_error(self, status):
-        print('Error detected')
-
-
-twitter_ids = [
-    '702590808965316608',  # Abhi_indian
-    '44196397',            # elonmusk
-    '92708272',            # msdhoni
-]
-
-
-def run_worker():
-    api_ = api.Bot().get_api()
-    tweet_listener = WorkerStreamListener(api_)
-    stream = tweepy.Stream(api_.auth, tweet_listener)
-    #stream.filter(track=["Hacking"], languages=["en"], is_async=True)
-    stream.filter(follow=twitter_ids)
-
-def check_mentions(user_id):
-    if user_id in twitter_ids:
-        return False
-    return True
+    def get_all_followers(self, user=''):
+        followers = self.api.followers()
+        for follower in followers:
+            self.logger.info(f'{follower.name} id is {follower.id}')

@@ -1,6 +1,9 @@
-from botutils import api, worker
-#bot = api.Bot()
-#bot.get_all_followers()
-#bot.get_latest_tweets()
+from botutils import streamer
+from botutils import utils
 
-worker.run_worker()
+logger = utils.get_logger()
+
+if __name__ == '__main__':
+    logger.info('Starting Twitter Bot')
+    streamer.run_streamer(mode='follow')
+    
