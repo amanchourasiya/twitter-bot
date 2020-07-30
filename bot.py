@@ -1,3 +1,4 @@
+import sys
 from botutils import streamer
 from botutils import utils
 

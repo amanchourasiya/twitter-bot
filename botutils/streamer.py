@@ -13,7 +13,7 @@ class StreamListener(tweepy.StreamListener):
 
         # Check if this tweet is just a mention
         if check_mentions(tweet.user.id):
-            logger.info(f'Tweet is a mention and is from {tweet.user.name}')
+            logger.debug(f'Tweet is a mention and is from {tweet.user.name}')
             return
 
         logger.info(f'{tweet.user.id}')
