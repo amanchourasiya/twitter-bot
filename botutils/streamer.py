@@ -13,7 +13,7 @@ class StreamListener(tweepy.StreamListener):
 
         # Check if this tweet is just a mention
         if check_mentions(tweet.user.id):
-            logger.info(f'Tweet is a mention and is from {tweet.user.name}')
+            logger.debug(f'Tweet is a mention and is from {tweet.user.name}')
             return
 
         logger.info(f'{tweet.user.id}')
@@ -37,23 +37,20 @@ class StreamListener(tweepy.StreamListener):
             except Exception as e:
                 logger.error(f'Exception during retweet {e}')
 
-        print(f'{tweet.user.name}:{tweet.text}')
+        logger.info(f'{tweet.user.name}:{tweet.text}')
 
-    def on_error(self, status_code):
-        if status_code == 420:
-            logger.error('Stream API limit reached , closing stream')
-            return False
-            
+    def on_error(self, status_code):    
         logger.error('Error detected while running stream listener')
 
 twitter_ids = [
     '702590808965316608',  # Abhi_indian
     '44196397',            # elonmusk
     '92708272',            # msdhoni
+    #'445921112',           # TechieAman
 ]
 
 def check_mentions(user_id):
-    if user_id in twitter_ids:
+    if str(user_id) in twitter_ids:
         return False
     return True
 
