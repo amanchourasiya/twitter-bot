@@ -19,9 +19,9 @@ class StreamListener(tweepy.StreamListener):
         logger.info(f'{tweet.user.id}')
 
         # Check if tweet is reply
-        if tweet.in_reply_to_status_id is not None:
-            logger.info('Tweet is a reply')
-            return
+        #if tweet.in_reply_to_status_id is not None:
+        #    logger.info('Tweet is a reply')
+        #    return
 
         # Like and retweet if not done already
         if not tweet.favorited:
