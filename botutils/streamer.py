@@ -61,10 +61,10 @@ def check_mentions(user_id):
       keywords: list of keywords to track for if mode is track
       twitter_ids: list of twitter id of all users to follow on
 '''
-def run_streamer(mode='follow', keywords=[], twitter_ids=twitter_ids):
+def run_streamer(api, mode='follow', keywords=[], twitter_ids=twitter_ids):
 
     logger.info('Getting API')
-    api_ = config.get_api()
+    api_ = api
     tweet_listener = StreamListener(api_)
     stream = tweepy.Stream(api_.auth, tweet_listener)
     
